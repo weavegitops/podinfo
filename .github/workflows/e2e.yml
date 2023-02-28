@@ -1,34 +1,31 @@
 name: e2e
 
 on:
+  pull_request:
   push:
     branches:
-      - "master"
-
-permissions:
-  contents: read
+      - 'master'
 
 jobs:
   kind-helm:
     strategy:
       matrix:
         helm-version:
-          - v3.11.0
+          - 3.9.0
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Kubernetes
-        uses: helm/kind-action@v1.5.0
+        uses: engineerd/setup-kind@v0.5.0
         with:
-          version: v0.17.0
-          cluster_name: kind
+          version: v0.11.1
       - name: Build container image
         run: |
           ./test/build.sh
           kind load docker-image test/podinfo:latest
       - name: Setup Helm
-        uses: azure/setup-helm@v3
+        uses: ./.github/actions/helm
         with:
           version: ${{ matrix.helm-version }}
       - name: Deploy

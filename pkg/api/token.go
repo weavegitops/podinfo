@@ -2,12 +2,13 @@ package api
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"io/ioutil"
+
+	"github.com/dgrijalva/jwt-go/v4"
 	"go.uber.org/zap"
 )
 
@@ -28,7 +29,7 @@ func (s *Server) tokenGenerateHandler(w http.ResponseWriter, r *http.Request) {
 	_, span := s.tracer.Start(r.Context(), "tokenGenerateHandler")
 	defer span.End()
 
-	body, err := io.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		s.logger.Error("reading the request body failed", zap.Error(err))
 		s.ErrorResponse(w, r, span, "invalid request body", http.StatusBadRequest)
@@ -46,7 +47,7 @@ func (s *Server) tokenGenerateHandler(w http.ResponseWriter, r *http.Request) {
 		user,
 		jwt.StandardClaims{
 			Issuer:    "podinfo",
-			ExpiresAt: expiresAt.Unix(),
+			ExpiresAt: jwt.At(expiresAt),
 		},
 	}
 
@@ -59,7 +60,7 @@ func (s *Server) tokenGenerateHandler(w http.ResponseWriter, r *http.Request) {
 
 	var result = TokenResponse{
 		Token:     t,
-		ExpiresAt: time.Unix(claims.StandardClaims.ExpiresAt, 0),
+		ExpiresAt: time.Unix(claims.StandardClaims.ExpiresAt.Unix(), 0),
 	}
 
 	s.JSONResponse(w, r, result)
@@ -109,7 +110,7 @@ func (s *Server) tokenValidateHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			var result = TokenValidationResponse{
 				TokenName: claims.Name,
-				ExpiresAt: time.Unix(claims.StandardClaims.ExpiresAt, 0),
+				ExpiresAt: time.Unix(claims.StandardClaims.ExpiresAt.Unix(), 0),
 			}
 			s.JSONResponse(w, r, result)
 		}
