@@ -15,6 +15,9 @@
   .v-application .v-parallax {
     height: 100vh !important;
   }
+  .v-parallax > * {
+      mix-blend-mode: lighten;
+  }
   </style>
 </head>
 <body>
@@ -90,7 +93,7 @@
         tlName2: '',
         tlColor2: 'grey',
         cuddleStyle: {
-            backgroundColor: '#34577c'
+            background: 'linear-gradient(0deg, rgba(9,9,121,1) 0%, rgba(60,86,121,1) 40%, rgba(60,86,121,1) 60%, rgba(0,212,255,1) 100%)',
         },
     }
     },
@@ -113,7 +116,7 @@
                 self.info = data
                 self.info.color = data.color
                 self.cuddleStyle = {
-                    backgroundColor: data.color
+                    background: data.color
                 }
                 self.info.logo = data.logo
                 document.title = data.hostname

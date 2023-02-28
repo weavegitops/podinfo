@@ -12,7 +12,7 @@ image:
   pullPolicy: IfNotPresent
 
 ui:
-  color: "#34577c"
+  color: "linear-gradient(0deg, rgba(9,9,121,1) 0%, rgba(60,86,121,1) 40%, rgba(60,86,121,1) 60%, rgba(0,212,255,1) 100%)"
   message: ""
   logo: ""
 
@@ -104,7 +104,8 @@ securityContext: {}
 ingress:
   enabled: false
   className: ""
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
