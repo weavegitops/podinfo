@@ -24,6 +24,4 @@ helm upgrade --install podinfo ./charts/podinfo \
     --set image.tag=latest \
     --set tls.enabled=true \
     --set certificate.create=true \
-    --set hpa.enabled=true \
-    --set hpa.cpu=95 \
     --namespace=default
